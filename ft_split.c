@@ -6,7 +6,7 @@
 /*   By: hben-laz <hben-laz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/09 16:59:27 by hben-laz          #+#    #+#             */
-/*   Updated: 2024/05/09 17:00:49 by hben-laz         ###   ########.fr       */
+/*   Updated: 2024/05/11 22:49:23 by hben-laz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,10 @@ static int	count_word(const char *s, char c)
 	i = 0;
 	while (s[i] != '\0')
 	{
-		if (s[i] != c)
+		if (s[i] != c && s[i] != '\t')
 		{
 			len++;
-			while (s[i] != c && s[i] != '\0')
+			while ((s[i] != c && s[i] != '\t') && s[i] != '\0')
 				i++;
 		}
 		else
@@ -75,10 +75,10 @@ char	**my_array(char **array, char const *s, char c, int nbr_word)
 	j = 0;
 	while (++i < nbr_word)
 	{
-		while (s[j] == c && s[j] != '\0')
+		while ((s[j] == c || s[j] == '\t') && s[j] != '\0')
 			j++;
 		end = j;
-		while (s[end] != c && s[end] != '\0')
+		while ((s[end] != c && s[end] != '\t') && s[end] != '\0')
 			end++;
 		array[i] = charge_word(s, j, end);
 		if (array[i] == NULL)
@@ -107,3 +107,4 @@ char	**ft_split(char const *s, char c)
 		return (NULL);
 	return (my_array(array, s, c, nbr_wrd));
 }
+		

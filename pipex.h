@@ -6,7 +6,7 @@
 /*   By: hben-laz <hben-laz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 15:52:09 by hben-laz          #+#    #+#             */
-/*   Updated: 2024/05/11 21:27:26 by hben-laz         ###   ########.fr       */
+/*   Updated: 2024/05/11 22:37:54 by hben-laz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,4 +32,4 @@ void	free_t_split(char **array);
 void	close_fd(int *fd);
 void	ft_wait();
 
-#endif
+#endif	
