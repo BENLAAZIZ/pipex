@@ -6,7 +6,7 @@
 /*   By: hben-laz <hben-laz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 15:51:48 by hben-laz          #+#    #+#             */
-/*   Updated: 2024/05/09 23:47:30 by hben-laz         ###   ########.fr       */
+/*   Updated: 2024/05/11 21:26:24 by hben-laz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 char	*find_path(char **env, char *str)
 {
 	int	i;
-	
+
 	i = 0;
 	while (env[i])
 	{
@@ -23,37 +23,33 @@ char	*find_path(char **env, char *str)
 			return (env[i]);
 		i++;
 	}
-
 	return (NULL);
 }
 
-void	ft_exec_cmd(char **cm1, char **cmd_find)
+void	exec_cmd(char **cmd, char **cmd_find)
 {
 	char	*s;
 	char	*comand;
 	int		i;
 
-	i = 0;
+	i = -1;
 	s = NULL;
 	comand = NULL;
-	s = ft_strjoin("/", cm1[0]);
+	s = ft_strjoin("/", cmd[0]);
 	if (!s)
-		return ;
-	while (cmd_find[i])
+		return (free_t_split(cmd));
+	while (cmd_find[++i])
 	{
 		comand = ft_strjoin(cmd_find[i], s);
 		if (!comand)
 			return (free(s));
 		if (access(comand, X_OK) != 0)
-		{
 			free(comand);
-			i++;
-		}
 		else 
 			break ;
 	}
 	free(s);
-	execve(comand, cm1, NULL);
+	execve(comand, cmd, NULL);
 }
 
 void	command_1(char **av, char **env, int *fd)
@@ -75,13 +71,13 @@ void	command_1(char **av, char **env, int *fd)
 		ft_error();
 	if (cm1[0][0] == '/')
 		execve(cm1[0], cm1, NULL);
-	else
+	cmd_find =  ft_split(find_path(env, "PATH=") + 5, ':');
+	if (!cmd_find)
 	{
-		cmd_find =  ft_split(find_path(env, "PATH=") + 5, ':');
-		if (!cmd_find)
-			ft_error();
-		ft_exec_cmd(cm1, cmd_find);
+		free_t_split(cm1);
+		ft_error();
 	}
+	exec_cmd(cm1, cmd_find);
 }
 
 void	command_2(char **av, char **env, int *fd)
@@ -91,7 +87,7 @@ void	command_2(char **av, char **env, int *fd)
 	int		fd_out;
 
 	close(fd[1]);
-	fd_out = open(av[4], O_RDWR | O_CREAT  | O_TRUNC , 0777);
+	fd_out = open(av[4], O_RDWR | O_CREAT  | O_TRUNC, 0777);
 	if (fd_out == -1)
 		ft_error();
 	dup2(fd[0], 0);
@@ -103,49 +99,39 @@ void	command_2(char **av, char **env, int *fd)
 		ft_error();
 	if (cm1[0][0] == '/')
 		execve(cm1[0], cm1, NULL);
-	else
+	cmd_find =  ft_split(find_path(env, "PATH=") + 5, ':');
+	if (!cmd_find)
 	{
-		cmd_find =  ft_split(find_path(env, "PATH=") + 5, ':');
-		if (!cmd_find)
-			ft_error();
-		ft_exec_cmd(cm1, cmd_find);
+		free_t_split(cm1);
+		ft_error();
 	}
+	exec_cmd(cm1, cmd_find);
 }
 
 int main(int ac, char **av, char **env)
 {
-	int pid;
+	int pid1;
 	int pid2;
 	int fd[2];
 	
-	dup2(1, 5);
 	if (ac != 5)
-	{
-		perror("Error :");
-		return 0;
-	}
+		return (perror("arg fail :"), 1);
 	if (pipe(fd) == -1)
-		perror("pipe :");
-	pid = fork();
-	if (pid == -1)
-		perror("");
-	else if (pid == 0)
-	{
+		perror("pipe fail :");
+	pid1 = fork();
+	if (pid1 == -1)
+		return (perror("pid fail :"), close_fd(fd), 1);
+	if (pid1 == 0)
 		command_1(av, env, fd);
-		//frie ila fayla
-		return (1);
-	}
 	else
 	{
 		pid2 = fork();
-		if (pid == -1)
-			perror("");
+		if (pid2 == -1)
+			return (perror("pid fail :"), close_fd(fd), 1);
 		if (pid2 == 0)
-		{
 			command_2(av, env, fd);
-			//frie ila fayla
-			return (1);
-		}	
 	}
+	close_fd(fd);
+	ft_wait();
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: hben-laz <hben-laz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/09 18:50:04 by hben-laz          #+#    #+#             */
-/*   Updated: 2024/05/09 18:51:20 by hben-laz         ###   ########.fr       */
+/*   Updated: 2024/05/11 21:26:35 by hben-laz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,3 +33,20 @@ void	free_t_split(char **array)
 	free(array);
 }
 
+void	close_fd(int *fd)
+{
+	close(fd[0]);
+	 close(fd[1]);
+}
+
+void ft_wait()
+{
+	int i;
+	
+	i = 2;
+	while(i--)
+	{		
+		if (wait(NULL) == -1)
+			return ;
+	}
+}
