@@ -6,7 +6,7 @@
 /*   By: hben-laz <hben-laz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 15:51:48 by hben-laz          #+#    #+#             */
-/*   Updated: 2024/05/11 21:26:24 by hben-laz         ###   ########.fr       */
+/*   Updated: 2024/05/11 23:47:51 by hben-laz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	exec_cmd(char **cmd, char **cmd_find)
 			return (free(s));
 		if (access(comand, X_OK) != 0)
 			free(comand);
-		else 
+		else
 			break ;
 	}
 	free(s);
@@ -58,24 +58,25 @@ void	command_1(char **av, char **env, int *fd)
 	char	**cmd_find;
 	int		fd_in;
 
-	close(fd[0]);
 	fd_in = open(av[1], O_RDONLY);
 	if (fd_in == -1)
-		ft_error();
-	dup2(fd[1], 1);
-	close(fd[1]);
-	dup2(fd_in, 0);
+		ft_error("file");
+	if (dup2(fd[1], 1) == -1)
+		ft_error("dup2");
+	close_fd(fd);
+	if (dup2(fd_in, 0) == -1)
+		ft_error("dup2");
 	close(fd_in);
 	cm1 = ft_split(av[2], ' ');
 	if (!cm1)
-		ft_error();
+		ft_error("split");
 	if (cm1[0][0] == '/')
 		execve(cm1[0], cm1, NULL);
-	cmd_find =  ft_split(find_path(env, "PATH=") + 5, ':');
+	cmd_find = ft_split(find_path(env, "PATH=") + 5, ':');
 	if (!cmd_find)
 	{
 		free_t_split(cm1);
-		ft_error();
+		ft_error("split");
 	}
 	exec_cmd(cm1, cmd_find);
 }
@@ -86,38 +87,39 @@ void	command_2(char **av, char **env, int *fd)
 	char	**cmd_find;
 	int		fd_out;
 
-	close(fd[1]);
-	fd_out = open(av[4], O_RDWR | O_CREAT  | O_TRUNC, 0777);
+	fd_out = open(av[4], O_RDWR | O_CREAT | O_TRUNC, 0777);
 	if (fd_out == -1)
-		ft_error();
-	dup2(fd[0], 0);
-	close(fd[0]);
-	dup2(fd_out, 1);
+		ft_error("file");
+	if (dup2(fd[0], 0) == -1)
+		ft_error("dup2");
+	close_fd(fd);
+	if (dup2(fd_out, 1) == -1)
+		ft_error("dup2");
 	close(fd_out);
 	cm1 = ft_split(av[3], ' ');
 	if (!cm1)
-		ft_error();
+		ft_error("split");
 	if (cm1[0][0] == '/')
 		execve(cm1[0], cm1, NULL);
-	cmd_find =  ft_split(find_path(env, "PATH=") + 5, ':');
+	cmd_find = ft_split(find_path(env, "PATH=") + 5, ':');
 	if (!cmd_find)
 	{
 		free_t_split(cm1);
-		ft_error();
+		ft_error("split");
 	}
 	exec_cmd(cm1, cmd_find);
 }
 
-int main(int ac, char **av, char **env)
+int	main(int ac, char **av, char **env)
 {
-	int pid1;
-	int pid2;
-	int fd[2];
-	
+	int	pid1;
+	int	pid2;
+	int	fd[2];
+
 	if (ac != 5)
 		return (perror("arg fail :"), 1);
 	if (pipe(fd) == -1)
-		perror("pipe fail :");
+		return (perror("pipe fail :"), 1);
 	pid1 = fork();
 	if (pid1 == -1)
 		return (perror("pid fail :"), close_fd(fd), 1);

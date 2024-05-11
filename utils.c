@@ -6,7 +6,7 @@
 /*   By: hben-laz <hben-laz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/09 18:47:22 by hben-laz          #+#    #+#             */
-/*   Updated: 2024/05/09 21:10:49 by hben-laz         ###   ########.fr       */
+/*   Updated: 2024/05/11 23:16:50 by hben-laz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 		return (ft_strdup(s2));
 	if (s2 == NULL)
 		return (ft_strdup(s1));
-	tab = (char *)malloc((ft_strlen(s1) + ft_strlen(s2) + 1) * sizeof(char)); 
+	tab = (char *)malloc((ft_strlen(s1) + ft_strlen(s2) + 1) * sizeof(char));
 	if (tab == NULL)
 		return (NULL);
 	while (i < ft_strlen(s1))
@@ -108,4 +108,3 @@ void	*ft_memcpy(void	*dst, const void *src, size_t n)
 	}
 	return (dst);
 }
-

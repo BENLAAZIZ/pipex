@@ -6,7 +6,7 @@
 /*   By: hben-laz <hben-laz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/09 16:59:27 by hben-laz          #+#    #+#             */
-/*   Updated: 2024/05/11 22:49:23 by hben-laz         ###   ########.fr       */
+/*   Updated: 2024/05/11 23:13:04 by hben-laz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,4 +107,3 @@ char	**ft_split(char const *s, char c)
 		return (NULL);
 	return (my_array(array, s, c, nbr_wrd));
 }
-		
