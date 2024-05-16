@@ -6,33 +6,31 @@
 /*   By: hben-laz <hben-laz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/09 18:50:04 by hben-laz          #+#    #+#             */
-/*   Updated: 2024/05/15 23:34:51 by hben-laz         ###   ########.fr       */
+/*   Updated: 2024/05/16 18:56:15 by hben-laz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-
-char	*ft_strchr(const char *s, int c)
+void	ft_error(char *s, char *flag, int i)
 {
-	int	i;
-
-	i = 0;
-	if ((unsigned char)c == '\0')
-		return ((char *)s + ft_strlen(s));
-	while (s[i] != '\0')
+	if (ft_strncmp(flag, "fail", 4) != 0 && i == 1)
 	{
-		if (s[i] == (unsigned char)c)
-			return ((char *)(s + i));
-		i++;
+		write(2, flag, ft_strlen(flag));
+		write(2, s, ft_strlen(s));
+		write(2, "\n", 1);
 	}
-	return (NULL);
-}
-
-
-void	ft_error(char *s)
-{
-	write(2, s, ft_strlen(s));
+	else if (ft_strncmp(flag, "fail", 4) != 0 && i == 0)
+	{
+		write(2, s, ft_strlen(s));
+		write(2, flag, ft_strlen(flag));
+		write(2, "\n", 1);
+	}
+	else
+	{
+		write(2, s, ft_strlen(s));
+		write(2, "\n", 1);
+	}
 	exit(1);
 }
 
@@ -55,16 +53,4 @@ void	close_fd(int *fd)
 {
 	close(fd[0]);
 	close(fd[1]);
-}
-
-void	ft_wait(void)
-{
-	int	i;
-
-	i = 2;
-	while (i--)
-	{
-		if (wait(NULL) == -1)
-			return ;
-	}
 }

@@ -6,25 +6,11 @@
 /*   By: hben-laz <hben-laz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 15:51:48 by hben-laz          #+#    #+#             */
-/*   Updated: 2024/05/15 23:46:27 by hben-laz         ###   ########.fr       */
+/*   Updated: 2024/05/16 18:56:50 by hben-laz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
-
-char	*find_path(char **env, char *str)
-{
-	int	i;
-
-	i = 0;
-	while (env[i])
-	{
-		if (ft_strncmp(env[i], str, ft_strlen(str)) == 0)
-			return (env[i]);
-		i++;
-	}
-	return (NULL);
-}
 
 void	exec_cmd(char **cmd, char **cmd_find)
 {
@@ -50,37 +36,59 @@ void	exec_cmd(char **cmd, char **cmd_find)
 	}
 	free(s);
 	if (execve(comand, cmd, NULL) == -1)
-		ft_error("command not found: \n");
+		ft_error("command not found: ", cmd[0], 0);
+}
+
+void	handle_file_operations(int fd_file, char **av, int *fd, int nc)
+{
+	if (nc == 1)
+	{
+		fd_file = open(av[1], O_RDONLY);
+		if (fd_file == -1)
+			ft_error("file fail :\n", "fail", 0);
+		if (dup2(fd[1], 1) == -1)
+			ft_error("dup2 fail :\n", "fail", 0);
+		close_fd(fd);
+		if (dup2(fd_file, 0) == -1)
+			ft_error("dup2 fail :\n", "fail", 0);
+	}
+	else
+	{
+		fd_file = open(av[4], O_RDWR | O_CREAT | O_TRUNC, 0777);
+		if (fd_file == -1)
+			ft_error("file fail :\n", "fail", 0);
+		if (dup2(fd[0], 0) == -1)
+			ft_error("dup2 fail :\n", "fail", 0);
+		close_fd(fd);
+		if (dup2(fd_file, 1) == -1)
+			ft_error("dup2 fail :\n", "fail", 0);
+	}
+	close(fd_file);
 }
 
 void	command_1(char **av, char **env, int *fd)
 {
 	char	**cm1;
 	char	**cmd_find;
-	int		fd_in;
+	char	*path;
 
-	fd_in = open(av[1], O_RDONLY);
-	if (fd_in == -1)
-		ft_error("file fail :\n");
-	if (dup2(fd[1], 1) == -1)
-		ft_error("dup2 fail :\n");
-	close_fd(fd);
-	if (dup2(fd_in, 0) == -1)
-		ft_error("dup2 fail :\n");
-	close(fd_in);
+	handle_file_operations(-1, av, fd, 1);
 	cm1 = ft_split(av[2], ' ');
 	if (!cm1)
-		ft_error("split fail :\n");
+		ft_error("split fail :\n", "fail", 0);
 	if (ft_strchr(cm1[0], '/') != NULL)
 	{
 		if (execve(cm1[0], cm1, NULL) == -1)
-			ft_error("command not found:\n");
+			ft_error("no such file or directory: ", cm1[0], 0);
 	}
-	cmd_find = ft_split(find_path(env, "PATH=") + 5, ':');
+	path = find_path(env, "PATH=");
+	if (path == NULL)
+		ft_error(": no such file or directory", cm1[0], 1);
+	cmd_find = ft_split(path, ':');
 	if (!cmd_find)
 	{
 		free_t_split(cm1);
-		ft_error("split fail :\n");
+		ft_error("split fail :\n", "fail", 0);
 	}
 	exec_cmd(cm1, cmd_find);
 }
@@ -89,30 +97,25 @@ void	command_2(char **av, char **env, int *fd)
 {
 	char	**cm1;
 	char	**cmd_find;
-	int		fd_out;
+	char	*path;
 
-	fd_out = open(av[4], O_RDWR | O_CREAT | O_TRUNC, 0777);
-	if (fd_out == -1)
-		ft_error("file fail :\n");
-	if (dup2(fd[0], 0) == -1)
-		ft_error("dup2 fail :\n");
-	close_fd(fd);
-	if (dup2(fd_out, 1) == -1)
-		ft_error("dup2 fail :\n");
-	close(fd_out);
+	handle_file_operations(-1, av, fd, 2);
 	cm1 = ft_split(av[3], ' ');
 	if (!cm1)
-		ft_error("split fail :\n");
+		ft_error("split fail :\n", "fail", 0);
 	if (ft_strchr(cm1[0], '/') != NULL)
 	{
 		if (execve(cm1[0], cm1, NULL) == -1)
-			ft_error("command not found:\n");
+			ft_error("no such file or directory: ", cm1[0], 0);
 	}
-	cmd_find = ft_split(find_path(env, "PATH=") + 5, ':');
+	path = find_path(env, "PATH=");
+	if (path == NULL)
+		ft_error(": no such file or directory", cm1[0], 1);
+	cmd_find = ft_split(path, ':');
 	if (!cmd_find)
 	{
 		free_t_split(cm1);
-		ft_error("split fail :\n");
+		ft_error("split fail :\n", "fail", 0);
 	}
 	exec_cmd(cm1, cmd_find);
 }
@@ -124,7 +127,7 @@ int	main(int ac, char **av, char **env)
 	int	fd[2];
 
 	if (ac != 5)
-		return (perror("arg fail : \n"), 1);
+		return (write(2, "number of arg is not 5 !!\n", 27), 1);
 	if (pipe(fd) == -1)
 		return (perror("pipe fail : \n"), 1);
 	pid1 = fork();
@@ -142,5 +145,6 @@ int	main(int ac, char **av, char **env)
 	}
 	close_fd(fd);
 	ft_wait();
+	pause();
 	return (0);
 }

@@ -1,20 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   error_functions.c                                  :+:      :+:    :+:   */
+/*   error_functions_bonus.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hben-laz <hben-laz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/09 18:50:04 by hben-laz          #+#    #+#             */
-/*   Updated: 2024/05/15 23:41:26 by hben-laz         ###   ########.fr       */
+/*   Created: 2024/05/16 15:15:03 by hben-laz          #+#    #+#             */
+/*   Updated: 2024/05/16 19:29:14 by hben-laz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex_bonus.h"
 
-void	ft_error(char *s)
+void	ft_error(char *s, char *flag, int i)
 {
-	write(2, s, ft_strlen(s));
+	if (ft_strncmp(flag, "fail", 4) != 0 && i == 1)
+	{
+		write(2, flag, ft_strlen(flag));
+		write(2, s, ft_strlen(s));
+		write(2, "\n", 1);
+	}
+	else if (ft_strncmp(flag, "fail", 4) != 0 && i == 0)
+	{
+		write(2, s, ft_strlen(s));
+		write(2, flag, ft_strlen(flag));
+		write(2, "\n", 1);
+	}
+	else
+	{
+		write(2, s, ft_strlen(s));
+		write(2, "\n", 1);
+	}
 	exit(1);
 }
 
@@ -50,7 +66,6 @@ void	wait_function(int c)
 		wait(NULL);
 	}
 }
-
 
 char	*ft_strchr(const char *s, int c)
 {
