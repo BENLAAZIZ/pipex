@@ -1,3 +1,4 @@
+
 NAME = pipex
 
 CC = cc
@@ -8,7 +9,7 @@ RM = rm -f
 
 SRC = Mandatory/pipex.c Mandatory/utils.c Mandatory/utils_suit.c   Mandatory/error_functions.c Mandatory/ft_split.c 
 
-SRC_BONUS = Bonus/pipex_bonus.c Bonus/utils_bonus.c Bonus/error_functions_bonus.c Bonus/ft_split_bonus.c 
+SRC_BONUS = Bonus/pipex_bonus.c Bonus/utils_bonus.c Bonus/utils_bonus_suit.c Bonus/error_functions_bonus.c Bonus/ft_split_bonus.c 
 
 OBJ = $(SRC:.c=.o)
 
