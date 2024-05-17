@@ -6,7 +6,7 @@
 /*   By: hben-laz <hben-laz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 15:51:48 by hben-laz          #+#    #+#             */
-/*   Updated: 2024/05/18 00:34:35 by hben-laz         ###   ########.fr       */
+/*   Updated: 2024/05/18 00:48:11 by hben-laz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	handle_file_operations(int fd_file, char **av, int *fd, int nc)
 	{
 		fd_file = open(av[1], O_RDONLY);
 		if (fd_file == -1)
-			ft_error("file fail :\n", "fail", 0);
+			ft_error("no such file or directory: ", av[1], 0);
 		if (dup2(fd[1], 1) == -1)
 			ft_error("dup2 fail :\n", "fail", 0);
 		close_fd(fd);
@@ -56,9 +56,7 @@ void	handle_file_operations(int fd_file, char **av, int *fd, int nc)
 	{
 		fd_file = open(av[4], O_RDWR | O_CREAT | O_TRUNC, 0777);
 		if (fd_file == -1)
-		{
 			ft_error("no such file or directory:", av[4], 0);
-		}
 		if (dup2(fd[0], 0) == -1)
 			ft_error("dup2 fail :\n", "fail", 0);
 		close_fd(fd);
