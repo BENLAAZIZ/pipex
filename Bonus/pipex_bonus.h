@@ -6,7 +6,7 @@
 /*   By: hben-laz <hben-laz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 15:52:09 by hben-laz          #+#    #+#             */
-/*   Updated: 2024/05/17 23:39:06 by hben-laz         ###   ########.fr       */
+/*   Updated: 2024/05/18 19:04:40 by hben-laz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ void	wait_function(int ac);
 char	*ft_strchr(const char *s, int c);
 char	*find_path(char **env, char *str);
 void	exec_cmd(char **cmd, char **cmd_find);
-void	handle_file_operations(int fd_file, char **av, int ac,int *fd, int nc);
+void	handle_file_operations(int *fd2, char **av, int ac,int *fd, int nc);
+char	*get_next_line(int fd);
 
 #endif
