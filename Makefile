@@ -24,7 +24,10 @@ $(NAME): $(OBJ)
 bonus: $(OBJ_BONUS)
 		$(CC) $(CFLAGS) $(OBJ_BONUS) -o $(NAME)_bonus
 
-%.o: %.c Mandatory/pipex.h Bonus/pipex_bonus.h
+Mandatory/%.o: Mandatory/%.c Mandatory/pipex.h
+		$(CC) $(CFLAGS) -o $@ -c $<
+
+Bonus/%.o: Bonus/%.c Bonus/pipex_bonus.h
 		$(CC) $(CFLAGS) -o $@ -c $<
 
 clean:

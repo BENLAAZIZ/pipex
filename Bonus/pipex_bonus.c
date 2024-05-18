@@ -6,19 +6,19 @@
 /*   By: hben-laz <hben-laz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 15:51:48 by hben-laz          #+#    #+#             */
-/*   Updated: 2024/05/18 19:51:05 by hben-laz         ###   ########.fr       */
+/*   Updated: 2024/05/18 23:43:57 by hben-laz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex_bonus.h"
 
-void	first_command(char **av, char **env, int *fd, int i, int *fd2)
+void	first_command(char **av, char **env, int *fd, int i)
 {
 	char	**cm1;
 	char	**cmd_find;
 	char	*path;
 
-	handle_file_operations(fd2, av, 0, fd, 1);
+	handle_file_operations(av, 0, fd, 1);
 	cm1 = ft_split(av[i], ' ');
 	if (!cm1)
 		ft_error("split fail :\n", "fail", 0);
@@ -39,13 +39,13 @@ void	first_command(char **av, char **env, int *fd, int i, int *fd2)
 	exec_cmd(cm1, cmd_find);
 }
 
-void	last_command(char **av, char **env, int *fd, int ac, int *fd2)
+void	last_command(char **av, char **env, int *fd, int ac)
 {
 	char	**cm1;
 	char	**cmd_find;
 	char	*path;
 
-	handle_file_operations( fd2, av, ac, fd, 2);
+	handle_file_operations(av, ac, fd, 2);
 	cm1 = ft_split(av[ac - 2], ' ');
 	if (!cm1)
 		ft_error("split fail :\n", "fail", 0);
@@ -95,28 +95,22 @@ void	intermediat(char *av,char **env, int *fd)
 	exec_cmd(cm1, cmd_find);
 }
 
-int	al_command(int ac, char **av,char **env,int i, int *fd2)
+int	al_command(int ac, char **av, char **env, int i, int *fd)
 {
 	int	pid;
-	int	fd[2];
-	int	nb;
-	int	j;
 
-	j = 0;
-	nb = ac - i - 2;
-	i++;
-	while (++j <= nb)
+	while (i < ac - 3)
 	{
 		if (pipe(fd) == -1)
 			return (perror("pipe fail :"), 1);
 		pid = fork();
 		if (pid == -1)
 			return (perror("pid fail :"), close_fd(fd), 1);
-		if (pid == 0 && j == 1)
-			first_command(av, env, fd, i, fd2);
-		if (pid == 0 && j == nb)
+		else if (pid == 0 && i == 0)
+			first_command(av, env, fd, i);
+		else if (pid == 0 && i == ac - 4)
 		{
-			last_command(av, env, fd, ac, fd2);
+			last_command(av, env, fd, ac);
 			break ;
 		}
 		else if (pid == 0)
@@ -126,69 +120,56 @@ int	al_command(int ac, char **av,char **env,int i, int *fd2)
 		close_fd(fd);
 		i++;
 	}
+	close_fd(fd);
 	return (0);
 }
 
 
-void	here_doc(char *limiter, int ac, int *fd, int *fd2)
+void	here_doc(char *limiter, int ac, int *fd)
 {
-	int	pid;
 	char	*line;
-	// int		fd1;
 
 	if (ac < 6)
 		ft_error("min 6 arg : \n", "fail", 0);
-	if (pipe(fd) == -1)
-		ft_error("pipe fail :\n", "fail", 0);
-	fd[1] = open("herd.txt", O_RDWR | O_CREAT | O_APPEND, 0777);
-	*fd2 = open("herd.txt", O_RDWR | O_CREAT | O_APPEND, 0777);
-	if (fd[1] == -1 || *fd2 == -1)
-		ft_error("file fail : \n", "fail", 0);
-	pid = fork();
-	if (pid == 0)
+	fd[1] = open("herd.txt", O_RDWR | O_CREAT | O_APPEND, 0777); // addad
+	fd[0] = open("herd.txt", O_RDWR | O_CREAT | O_APPEND, 0777);
+	if (fd[1] == -1 || fd[0] == -1)
+		ft_error("open fail : \n", "fail", 0);
+	unlink("herd.txt");
+	while (1)
 	{
-		close(fd[0]);
+		write(1, "> ", 2);
 		line = get_next_line(0);
-		while (line)
-		{
-			if (ft_strncmp(line, limiter, ft_strlen(limiter)) == 0)
-				exit(1);
-			write(fd[1], line, ft_strlen(line));
-			free(line);
-			line = NULL;
-			line = get_next_line(0);
-		}
+		if (ft_strncmp(line, limiter, ft_strlen(limiter)) == 0
+			&& ft_strlen(limiter) == ft_strlen(line) - 1)
+			break ;
+		write(fd[1], line, ft_strlen(line));
+		free(line);
 	}
-	else
-	{
-		// close(fd[1]);
-		if (dup2(fd[0], 0) == -1)
-			ft_error("dup2 fail : \n", "fail", 0);
-		wait(NULL);
-	}
+	close(fd[1]);
+	if (dup2(fd[0], 0) == -1)
+		ft_error("dup2 : ", "fail", 0);
 }
 
+// i = 0;
 
+// i < ac - 3
 int	main(int ac, char **av, char **env)
 {
 	int	i;
 	int fd[2];
-	int fd2;
 
-	i = 1;
+	i = 0;
 	if (ac < 5)
 		return (write(2, "min 5 arg", 9), 1);
-	if (ft_strncmp(av[1], "here_doc", 8) == 0)
+	if (ft_strncmp(av[1], "here_doc", 9) == 0)
 	{
-		here_doc(av[2] , ac, fd, &fd2);
-		i = 2;
+		here_doc(av[2] , ac, fd);
+		i += 2;
 	}
-	if (al_command(ac, av, env, i, &fd2) == 1)
+	if (al_command(ac, av, env, i, fd) == 1)
 		return (1);
-	close_fd(fd);
-	close(fd2);
 	close(0);
 	wait_function(ac);
-	pause();
 	return (0);
 }
