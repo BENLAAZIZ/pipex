@@ -6,7 +6,7 @@
 /*   By: hben-laz <hben-laz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 15:52:09 by hben-laz          #+#    #+#             */
-/*   Updated: 2024/05/18 23:45:56 by hben-laz         ###   ########.fr       */
+/*   Updated: 2024/05/19 17:54:05 by hben-laz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,15 @@
 #  define BUFFER_SIZE 10000
 # endif
 
+typedef struct data_s 
+{
+	char	*path;
+	char	**av;
+	int		fd[2];
+	int		ac;
+} data_t;
+
+
 size_t	ft_strlen(const char *s);
 char	*ft_strjoin(char const *s1, char const *s2);
 int		ft_strncmp(const char *s1, const char *s2, size_t n);
@@ -37,7 +46,7 @@ void	wait_function(int ac);
 char	*ft_strchr(const char *s, int c);
 char	*find_path(char **env, char *str);
 void	exec_cmd(char **cmd, char **cmd_find);
-void	handle_file_operations(char **av, int ac,int *fd, int nc);
-char	*get_next_line(int fd);
+void	handle_file_operations(char **av, int ac, int *fd, int nc);
+void	here_doc(char *limiter, int ac, int *fd);
 
 #endif

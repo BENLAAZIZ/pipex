@@ -6,14 +6,11 @@
 /*   By: hben-laz <hben-laz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 21:35:08 by hben-laz          #+#    #+#             */
-/*   Updated: 2024/05/18 23:30:54 by hben-laz         ###   ########.fr       */
+/*   Updated: 2024/05/19 17:48:30 by hben-laz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "pipex_bonus.h"
-
-
 
 char	*ft_strchr(const char *s, int c)
 {
@@ -74,34 +71,31 @@ void	exec_cmd(char **cmd, char **cmd_find)
 		ft_error("command not found: ", cmd[0], 0);
 }
 
-void	handle_file_operations(char **av, int ac,int *fd, int nc)
+void	handle_file_operations(char **av, int ac, int *fd, int nc)
 {
-	int fd_file;
+	int	fd_file;
 
 	if (nc == 1)
 	{
 		fd_file = open(av[1], O_RDONLY);
 		if (fd_file == -1)
-			ft_error("no such file or directory:", av[1], 0);
+			perror(av[1]);
 		if (dup2(fd[1], 1) == -1)
-			ft_error("dup2 fail :\n", "fail", 0);
-		close_fd(fd);
+			perror("dup2 ");
 		if (dup2(fd_file, 0) == -1)
-			ft_error("dup2 fail :\n", "fail", 0);
-		close(fd_file);
+			perror("dup2 ");
 	}
 	else
 	{
-		close_fd(fd);
 		if (ft_strncmp(av[1], "here_doc", 8) == 0)
 			fd_file = open(av[ac - 1], O_RDWR | O_CREAT | O_APPEND, 0777);
 		else
 			fd_file = open(av[ac - 1], O_RDWR | O_CREAT | O_TRUNC, 0777);
 		if (fd_file == -1)
-			ft_error("no such file or directory:", av[ac - 1], 0);
+			perror(av[ac - 1]);
 		if (dup2(fd_file, 1) == -1)
-			ft_error("dup2 fail :\n", "fail", 0);
-		close(fd_file);
+			perror("dup2 ");
 	}
+	close_fd(fd);
+	close(fd_file);
 }
-

@@ -6,7 +6,7 @@
 /*   By: hben-laz <hben-laz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 15:51:48 by hben-laz          #+#    #+#             */
-/*   Updated: 2024/05/18 23:43:57 by hben-laz         ###   ########.fr       */
+/*   Updated: 2024/05/19 17:54:20 by hben-laz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,14 +66,14 @@ void	last_command(char **av, char **env, int *fd, int ac)
 	exec_cmd(cm1, cmd_find);
 }
 
-void	intermediat(char *av,char **env, int *fd)
+void	intermediat(char *av, char **env, int *fd)
 {
 	char	**cm1;
 	char	**cmd_find;
 	char	*path;
 
 	if (dup2(fd[1], 1) == -1)
-		ft_error(" intermid dup2 fail : \n", "fail", 0);
+		ft_error("dup2 fail : \n", "fail", 0);
 	close_fd(fd);
 	cm1 = ft_split(av, ' ');
 	if (!cm1)
@@ -81,7 +81,7 @@ void	intermediat(char *av,char **env, int *fd)
 	if (ft_strchr(cm1[0], '/') != NULL)
 	{
 		execve(cm1[0], cm1, NULL);
-			ft_error("no such file or directory: ", cm1[0], 0);
+		ft_error("no such file or directory: ", cm1[0], 0);
 	}
 	path = find_path(env, "PATH=") + 5;
 	if (!path)
@@ -99,7 +99,7 @@ int	al_command(int ac, char **av, char **env, int i, int *fd)
 {
 	int	pid;
 
-	while (i < ac - 3)
+	while (++i < ac - 3)
 	{
 		if (pipe(fd) == -1)
 			return (perror("pipe fail :"), 1);
@@ -107,65 +107,35 @@ int	al_command(int ac, char **av, char **env, int i, int *fd)
 		if (pid == -1)
 			return (perror("pid fail :"), close_fd(fd), 1);
 		else if (pid == 0 && i == 0)
-			first_command(av, env, fd, i);
+			first_command(av, env, fd, i + 2);
 		else if (pid == 0 && i == ac - 4)
 		{
 			last_command(av, env, fd, ac);
 			break ;
 		}
 		else if (pid == 0)
-			intermediat(av[i], env, fd);
+			intermediat(av[i + 2], env, fd);
 		if (dup2(fd[0], 0) == -1)
 			ft_error("dup2 fail : \n", "fail", 0);
 		close_fd(fd);
-		i++;
 	}
 	close_fd(fd);
 	return (0);
 }
 
-
-void	here_doc(char *limiter, int ac, int *fd)
-{
-	char	*line;
-
-	if (ac < 6)
-		ft_error("min 6 arg : \n", "fail", 0);
-	fd[1] = open("herd.txt", O_RDWR | O_CREAT | O_APPEND, 0777); // addad
-	fd[0] = open("herd.txt", O_RDWR | O_CREAT | O_APPEND, 0777);
-	if (fd[1] == -1 || fd[0] == -1)
-		ft_error("open fail : \n", "fail", 0);
-	unlink("herd.txt");
-	while (1)
-	{
-		write(1, "> ", 2);
-		line = get_next_line(0);
-		if (ft_strncmp(line, limiter, ft_strlen(limiter)) == 0
-			&& ft_strlen(limiter) == ft_strlen(line) - 1)
-			break ;
-		write(fd[1], line, ft_strlen(line));
-		free(line);
-	}
-	close(fd[1]);
-	if (dup2(fd[0], 0) == -1)
-		ft_error("dup2 : ", "fail", 0);
-}
-
-// i = 0;
-
-// i < ac - 3
 int	main(int ac, char **av, char **env)
 {
 	int	i;
-	int fd[2];
-
-	i = 0;
+	int	fd[2];
+	
+	i = -1;
 	if (ac < 5)
 		return (write(2, "min 5 arg", 9), 1);
+	
 	if (ft_strncmp(av[1], "here_doc", 9) == 0)
 	{
-		here_doc(av[2] , ac, fd);
-		i += 2;
+		here_doc(av[2], ac, fd);
+		i += 1;
 	}
 	if (al_command(ac, av, env, i, fd) == 1)
 		return (1);

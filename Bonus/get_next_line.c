@@ -6,13 +6,11 @@
 /*   By: hben-laz <hben-laz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 15:35:58 by hben-laz          #+#    #+#             */
-/*   Updated: 2024/05/18 15:35:59 by hben-laz         ###   ########.fr       */
+/*   Updated: 2024/05/19 17:08:19 by hben-laz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "pipex_bonus.h"
-
 
 static char	*ft_substr(char *s, unsigned int start, size_t len)
 {
@@ -91,7 +89,7 @@ static char	*read_function(char **buf, char *buf_save, int n, int fd)
 	return (buf_save);
 }
 
-char	*get_next_line(int fd)
+static char	*get_next_line(int fd)
 {
 	char		*buf;
 	char static	*buf_save;
@@ -115,4 +113,32 @@ char	*get_next_line(int fd)
 	free (tmp);
 	tmp = NULL;
 	return (line);
+}
+
+void	here_doc(char *limiter, int ac, int *fd)
+{
+	char	*line;
+
+	if (ac < 6)
+		ft_error("min 6 arg : \n", "fail", 0);
+	fd[1] = open("herd.txt", O_RDWR | O_CREAT | O_APPEND, 0777);
+	fd[0] = open("herd.txt", O_RDWR | O_CREAT | O_APPEND, 0777);
+	if (fd[1] == -1 || fd[0] == -1)
+		ft_error("open fail : \n", "fail", 0);
+	unlink("herd.txt");
+	while (1)
+	{
+		write(1, "> ", 2);
+		line = get_next_line(0);
+		if (!line)
+			break ;
+		if (ft_strncmp(line, limiter, ft_strlen(limiter)) == 0
+			&& ft_strlen(limiter) == ft_strlen(line) - 1)
+			break ;
+		write(fd[1], line, ft_strlen(line));
+		free(line);
+	}
+	close(fd[1]);
+	if (dup2(fd[0], 0) == -1)
+		ft_error("dup2 : ", "fail", 0);
 }
