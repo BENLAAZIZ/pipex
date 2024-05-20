@@ -6,13 +6,13 @@
 /*   By: hben-laz <hben-laz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/09 18:50:04 by hben-laz          #+#    #+#             */
-/*   Updated: 2024/05/16 18:56:15 by hben-laz         ###   ########.fr       */
+/*   Updated: 2024/05/20 01:40:12 by hben-laz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void	ft_error(char *s, char *flag, int i)
+void	ft_error(char *s, char *flag, int i, int in)
 {
 	if (ft_strncmp(flag, "fail", 4) != 0 && i == 1)
 	{
@@ -25,6 +25,8 @@ void	ft_error(char *s, char *flag, int i)
 		write(2, s, ft_strlen(s));
 		write(2, flag, ft_strlen(flag));
 		write(2, "\n", 1);
+		if (in == -1)
+			return ;
 	}
 	else
 	{
