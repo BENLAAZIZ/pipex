@@ -6,7 +6,7 @@
 /*   By: hben-laz <hben-laz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 21:35:08 by hben-laz          #+#    #+#             */
-/*   Updated: 2024/05/19 19:33:25 by hben-laz         ###   ########.fr       */
+/*   Updated: 2024/05/19 23:03:33 by hben-laz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,18 @@
 
 void	ft_initialis_data(t_data *data, int ac, char **av, char **env)
 {
+	char	*str;
+
 	data->ac = ac;
 	data->av = av;
-	data->path = find_path(env, "PATH=") + 5;
+	str = NULL;
+	str = find_path(env, "PATH=");
+	if (str == NULL)
+	{
+		data->path = NULL;
+		return ;
+	}
+	data->path = ft_split(str + 5, ':');
 }
 
 char	*ft_strchr(const char *s, int c)
@@ -40,7 +49,7 @@ char	*find_path(char **env, char *str)
 	int	i;
 
 	i = 0;
-	if (!env || !env[0] || !str)
+	if (!env || !*env || !str)
 		return (NULL);
 	while (env[i])
 	{

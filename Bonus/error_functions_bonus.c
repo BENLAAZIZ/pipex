@@ -6,7 +6,7 @@
 /*   By: hben-laz <hben-laz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 15:15:03 by hben-laz          #+#    #+#             */
-/*   Updated: 2024/05/17 23:12:09 by hben-laz         ###   ########.fr       */
+/*   Updated: 2024/05/19 23:18:46 by hben-laz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@ void	ft_error(char *s, char *flag, int i)
 	{
 		write(2, s, ft_strlen(s));
 		write(2, "\n", 1);
+		exit(1);
 	}
-	exit(1);
 }
 
 void	free_t_split(char **array)
