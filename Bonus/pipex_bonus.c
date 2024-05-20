@@ -6,7 +6,7 @@
 /*   By: hben-laz <hben-laz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 16:11:29 by hben-laz          #+#    #+#             */
-/*   Updated: 2024/05/20 17:47:20 by hben-laz         ###   ########.fr       */
+/*   Updated: 2024/05/20 23:11:13 by hben-laz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	first_command(t_data *data, int i)
 	handle_file_operations(data, 1);
 	cm1 = ft_split(data->av[i], ' ');
 	if (!cm1)
-		ft_error("split fail :\n", "fail", 0, 0);
+		ft_error("command not found: ", " ", 0, 0);
 	if (ft_strchr(cm1[0], '/') != NULL)
 	{
 		if (execve(cm1[0], cm1, NULL) == -1)
@@ -41,7 +41,7 @@ void	last_command(t_data *data)
 	handle_file_operations(data, 2);
 	cm1 = ft_split(data->av[data->ac - 2], ' ');
 	if (!cm1)
-		ft_error("split fail :\n", "fail", 0, 0);
+		ft_error("command not found: ", " ", 0, 0);
 	if (ft_strchr(cm1[0], '/') != NULL)
 	{
 		if (execve(cm1[0], cm1, NULL) == -1)
@@ -64,7 +64,7 @@ void	intermediat(char *str, t_data *data)
 	close_fd(data->fd);
 	cm1 = ft_split(str, ' ');
 	if (!cm1)
-		ft_error("split fail :\n", "fail", 0, 0);
+		ft_error("command not found: ", " ", 0, 0);
 	if (ft_strchr(cm1[0], '/') != NULL)
 	{
 		if (execve(cm1[0], cm1, NULL) == -1)
@@ -115,7 +115,7 @@ int	main(int ac, char **av, char **env)
 	i = -1;
 	ft_initialis_data(&data, ac, av, env);
 	if (ac < 5)
-		return (write(2, "min 5 arg", 9), 1);
+		return (free_t_split(data.path), write(2, "min 5 arg\n", 10), 1);
 	if (ft_strncmp(av[1], "here_doc", 9) == 0)
 	{
 		here_doc(av[2], ac, data.fd);
@@ -125,5 +125,6 @@ int	main(int ac, char **av, char **env)
 		return (1);
 	close(0);
 	wait_function(ac);
+	free_t_split(data.path);
 	return (0);
 }

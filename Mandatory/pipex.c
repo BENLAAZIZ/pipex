@@ -6,7 +6,7 @@
 /*   By: hben-laz <hben-laz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 15:51:48 by hben-laz          #+#    #+#             */
-/*   Updated: 2024/05/20 16:00:00 by hben-laz         ###   ########.fr       */
+/*   Updated: 2024/05/20 23:24:17 by hben-laz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	handle_file_operations(int fd_file, char **av, int *fd, int nc)
 	}
 	else
 	{
-		fd_file = open(av[4], O_RDWR | O_CREAT | O_TRUNC, 0777);
+		fd_file = open(av[4], O_RDWR | O_CREAT | O_TRUNC, 0644);
 		if (fd_file == -1)
 			ft_error("no such file or directory:", av[4], 0, 0);
 		dup2(fd[0], 0);
@@ -71,7 +71,7 @@ void	command_1(char **av, char **env, int *fd)
 	handle_file_operations(-1, av, fd, 1);
 	cm1 = ft_split(av[2], ' ');
 	if (!cm1)
-		ft_error("split fail :\n", "fail", 0, 0);
+		ft_error("command not found: ", " ", 0, 0);
 	if (ft_strchr(cm1[0], '/') != NULL)
 	{
 		if (execve(cm1[0], cm1, NULL) == -1)
@@ -98,7 +98,7 @@ void	command_2(char **av, char **env, int *fd)
 	handle_file_operations(-1, av, fd, 2);
 	cm1 = ft_split(av[3], ' ');
 	if (!cm1)
-		ft_error("split fail :\n", "fail", 0, 0);
+		ft_error("command not found: ", " ", 0, 0);
 	if (ft_strchr(cm1[0], '/') != NULL)
 	{
 		if (execve(cm1[0], cm1, NULL) == -1)

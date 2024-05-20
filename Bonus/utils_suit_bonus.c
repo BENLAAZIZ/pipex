@@ -6,7 +6,7 @@
 /*   By: hben-laz <hben-laz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 16:12:00 by hben-laz          #+#    #+#             */
-/*   Updated: 2024/05/20 17:54:56 by hben-laz         ###   ########.fr       */
+/*   Updated: 2024/05/20 21:51:32 by hben-laz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ void	exec_cmd(char **cmd, char **cmd_find)
 	comand = NULL;
 	s = ft_strjoin("/", cmd[0]);
 	if (!s)
-		return (free_t_split(cmd));
+		return (free_t_split(cmd), free_t_split(cmd_find));
 	while (cmd_find[++i])
 	{
 		comand = ft_strjoin(cmd_find[i], s);
@@ -83,6 +83,7 @@ void	exec_cmd(char **cmd, char **cmd_find)
 			break ;
 	}
 	free(s);
+	free_t_split(cmd_find);
 	if (execve(comand, cmd, NULL) == -1)
 		ft_error("command not found: ", cmd[0], 0, 0);
 }
@@ -101,10 +102,10 @@ void	handle_file_operations(t_data *data, int nc)
 	{
 		if (ft_strncmp(data->av[1], "here_doc", 8) == 0)
 			data->fd_file = open(data->av[data->ac - 1],
-					O_RDWR | O_CREAT | O_APPEND, 0777);
+					O_RDWR | O_CREAT | O_APPEND, 0644);
 		else
 			data->fd_file = open(data->av[data->ac - 1],
-					O_RDWR | O_CREAT | O_TRUNC, 0777);
+					O_RDWR | O_CREAT | O_TRUNC, 0644);
 		if (data->fd_file == -1)
 			perror(data->av[data->ac - 1]);
 		dup2(data->fd_file, 1);

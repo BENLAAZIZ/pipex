@@ -6,7 +6,7 @@
 /*   By: hben-laz <hben-laz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 16:11:22 by hben-laz          #+#    #+#             */
-/*   Updated: 2024/05/20 16:43:07 by hben-laz         ###   ########.fr       */
+/*   Updated: 2024/05/20 21:59:12 by hben-laz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,8 +121,8 @@ void	here_doc(char *limiter, int ac, int *fd)
 
 	if (ac < 6)
 		ft_error("min 6 arg : \n", "fail", 0, 0);
-	fd[1] = open("herd.txt", O_RDWR | O_CREAT | O_APPEND, 0777);
-	fd[0] = open("herd.txt", O_RDWR | O_CREAT | O_APPEND, 0777);
+	fd[1] = open("herd.txt", O_RDWR | O_CREAT | O_APPEND, 0644);
+	fd[0] = open("herd.txt", O_RDWR | O_CREAT | O_APPEND, 0644);
 	if (fd[1] == -1 || fd[0] == -1)
 		ft_error("open fail : \n", "fail", 0, -1);
 	unlink("herd.txt");
@@ -140,4 +140,6 @@ void	here_doc(char *limiter, int ac, int *fd)
 	}
 	close(fd[1]);
 	dup2(fd[0], 0);
+	close(fd[0]);
+	free(line);
 }
