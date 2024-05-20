@@ -6,7 +6,7 @@
 /*   By: hben-laz <hben-laz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 15:52:09 by hben-laz          #+#    #+#             */
-/*   Updated: 2024/05/19 22:34:33 by hben-laz         ###   ########.fr       */
+/*   Updated: 2024/05/20 18:01:17 by hben-laz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,8 @@
 
 # include <unistd.h>
 # include <stdlib.h>
-# include <string.h>
 # include <stdio.h>
 # include <fcntl.h>
-# include <sys/_types.h>
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 10000
@@ -36,7 +34,7 @@ typedef struct s_data
 size_t	ft_strlen(const char *s);
 char	*ft_strjoin(char const *s1, char const *s2);
 int		ft_strncmp(const char *s1, const char *s2, size_t n);
-void	ft_error(char *s, char *flag, int i);
+void	ft_error(char *s, char *flag, int i, int in);
 char	**ft_split(char const *s, char c);
 char	*ft_strdup(const char *s1);
 void	*ft_memcpy(void	*dst, const void *src, size_t n);

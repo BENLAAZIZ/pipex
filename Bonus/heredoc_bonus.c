@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   heredoc_bonus.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hben-laz <hben-laz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/18 15:35:58 by hben-laz          #+#    #+#             */
-/*   Updated: 2024/05/19 17:08:19 by hben-laz         ###   ########.fr       */
+/*   Created: 2024/05/20 16:11:22 by hben-laz          #+#    #+#             */
+/*   Updated: 2024/05/20 16:43:07 by hben-laz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,11 +120,11 @@ void	here_doc(char *limiter, int ac, int *fd)
 	char	*line;
 
 	if (ac < 6)
-		ft_error("min 6 arg : \n", "fail", 0);
+		ft_error("min 6 arg : \n", "fail", 0, 0);
 	fd[1] = open("herd.txt", O_RDWR | O_CREAT | O_APPEND, 0777);
 	fd[0] = open("herd.txt", O_RDWR | O_CREAT | O_APPEND, 0777);
 	if (fd[1] == -1 || fd[0] == -1)
-		ft_error("open fail : \n", "fail", 0);
+		ft_error("open fail : \n", "fail", 0, -1);
 	unlink("herd.txt");
 	while (1)
 	{
@@ -139,6 +139,5 @@ void	here_doc(char *limiter, int ac, int *fd)
 		free(line);
 	}
 	close(fd[1]);
-	if (dup2(fd[0], 0) == -1)
-		ft_error("dup2 : ", "fail", 0);
+	dup2(fd[0], 0);
 }

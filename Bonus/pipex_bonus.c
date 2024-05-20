@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: hben-laz <hben-laz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/03 15:51:48 by hben-laz          #+#    #+#             */
-/*   Updated: 2024/05/19 23:14:09 by hben-laz         ###   ########.fr       */
+/*   Created: 2024/05/20 16:11:29 by hben-laz          #+#    #+#             */
+/*   Updated: 2024/05/20 17:47:20 by hben-laz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,18 +19,15 @@ void	first_command(t_data *data, int i)
 	handle_file_operations(data, 1);
 	cm1 = ft_split(data->av[i], ' ');
 	if (!cm1)
-		ft_error("split fail :\n", "fail", 0);
+		ft_error("split fail :\n", "fail", 0, 0);
 	if (ft_strchr(cm1[0], '/') != NULL)
 	{
 		if (execve(cm1[0], cm1, NULL) == -1)
-		{
-			ft_error("no such file or directory: ", cm1[0], 0);
-			exit(1);
-		}
+			ft_error("no such file or directory: ", cm1[0], 0, 0);
 	}
 	if (data->path == NULL)
 	{
-		ft_error(": no such file or directory", cm1[0], 1);
+		ft_error(": no such file or directory", cm1[0], 1, -1);
 		free_t_split(cm1);
 		exit(1);
 	}
@@ -44,18 +41,15 @@ void	last_command(t_data *data)
 	handle_file_operations(data, 2);
 	cm1 = ft_split(data->av[data->ac - 2], ' ');
 	if (!cm1)
-		ft_error("split fail :\n", "fail", 0);
+		ft_error("split fail :\n", "fail", 0, 0);
 	if (ft_strchr(cm1[0], '/') != NULL)
 	{
 		if (execve(cm1[0], cm1, NULL) == -1)
-		{
-			ft_error("no such file or directory: ", cm1[0], 0);
-			exit(1);
-		}
+			ft_error("no such file or directory: ", cm1[0], 0, 0);
 	}
 	if (data->path == NULL)
 	{
-		ft_error(": no such file or directory", cm1[0], 1);
+		ft_error(": no such file or directory", cm1[0], 1, -1);
 		free_t_split(cm1);
 		exit(1);
 	}
@@ -66,23 +60,19 @@ void	intermediat(char *str, t_data *data)
 {
 	char	**cm1;
 
-	if (dup2(data->fd[1], 1) == -1)
-		ft_error("dup2 fail : \n", "fail", 0);
+	dup2(data->fd[1], 1);
 	close_fd(data->fd);
 	cm1 = ft_split(str, ' ');
 	if (!cm1)
-		ft_error("split fail :\n", "fail", 0);
+		ft_error("split fail :\n", "fail", 0, 0);
 	if (ft_strchr(cm1[0], '/') != NULL)
 	{
 		if (execve(cm1[0], cm1, NULL) == -1)
-		{
-			ft_error("no such file or directory: ", cm1[0], 0);
-			exit(1);
-		}
+			ft_error("no such file or directory: ", cm1[0], 0, 0);
 	}
 	if (data->path == NULL)
 	{
-		ft_error(": no such file or directory", cm1[0], 1);
+		ft_error(": no such file or directory", cm1[0], 1, -1);
 		free_t_split(cm1);
 		exit(1);
 	}
@@ -110,7 +100,7 @@ int	al_command(t_data *data, int i)
 		else if (pid == 0)
 			intermediat(data->av[i + 2], data);
 		if (dup2(data->fd[0], 0) == -1)
-			ft_error("dup2 fail : \n", "fail", 0);
+			ft_error("dup2 fail : ", "fail", 0, 0);
 		close_fd(data->fd);
 	}
 	close_fd(data->fd);

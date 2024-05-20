@@ -5,33 +5,37 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: hben-laz <hben-laz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/16 15:15:03 by hben-laz          #+#    #+#             */
-/*   Updated: 2024/05/19 23:18:46 by hben-laz         ###   ########.fr       */
+/*   Created: 2024/05/20 16:11:08 by hben-laz          #+#    #+#             */
+/*   Updated: 2024/05/20 17:44:44 by hben-laz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex_bonus.h"
 
-void	ft_error(char *s, char *flag, int i)
+void	ft_error(char *s, char *flag, int i, int in)
 {
 	if (ft_strncmp(flag, "fail", 4) != 0 && i == 1)
 	{
 		write(2, flag, ft_strlen(flag));
 		write(2, s, ft_strlen(s));
 		write(2, "\n", 1);
+		if (in == -1)
+			return ;
 	}
 	else if (ft_strncmp(flag, "fail", 4) != 0 && i == 0)
 	{
 		write(2, s, ft_strlen(s));
 		write(2, flag, ft_strlen(flag));
 		write(2, "\n", 1);
+		if (in == -1)
+			return ;
 	}
 	else
 	{
 		write(2, s, ft_strlen(s));
 		write(2, "\n", 1);
-		exit(1);
 	}
+	exit(1);
 }
 
 void	free_t_split(char **array)

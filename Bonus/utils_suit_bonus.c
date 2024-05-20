@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_bonus_suit.c                                 :+:      :+:    :+:   */
+/*   utils_suit_bonus.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hben-laz <hben-laz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/16 21:35:08 by hben-laz          #+#    #+#             */
-/*   Updated: 2024/05/19 23:03:33 by hben-laz         ###   ########.fr       */
+/*   Created: 2024/05/20 16:12:00 by hben-laz          #+#    #+#             */
+/*   Updated: 2024/05/20 17:54:56 by hben-laz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ void	exec_cmd(char **cmd, char **cmd_find)
 	}
 	free(s);
 	if (execve(comand, cmd, NULL) == -1)
-		ft_error("command not found: ", cmd[0], 0);
+		ft_error("command not found: ", cmd[0], 0, 0);
 }
 
 void	handle_file_operations(t_data *data, int nc)
@@ -94,10 +94,8 @@ void	handle_file_operations(t_data *data, int nc)
 		data->fd_file = open(data->av[1], O_RDONLY);
 		if (data->fd_file == -1)
 			perror(data->av[1]);
-		if (dup2(data->fd[1], 1) == -1)
-			perror("dup2 ");
-		if (dup2(data->fd_file, 0) == -1)
-			perror("dup2 ");
+		dup2(data->fd[1], 1);
+		dup2(data->fd_file, 0);
 	}
 	else
 	{
@@ -109,8 +107,7 @@ void	handle_file_operations(t_data *data, int nc)
 					O_RDWR | O_CREAT | O_TRUNC, 0777);
 		if (data->fd_file == -1)
 			perror(data->av[data->ac - 1]);
-		if (dup2(data->fd_file, 1) == -1)
-			perror("dup2 ");
+		dup2(data->fd_file, 1);
 	}
 	close_fd(data->fd);
 	close(data->fd_file);
