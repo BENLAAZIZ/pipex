@@ -1,4 +1,4 @@
-# pipex_git
+#                                  pipex_git
 
 `Pipex` is a program designed to mimic the behavior of the shell command < file1 cmd1 | cmd2 > file2. It serves as an intermediate level project in C programming that demonstrates proficiency in process management, inter-process communication (IPC) using pipes, and error handling.
 
@@ -49,9 +49,7 @@ The Pipex program takes four arguments:
 
 
 #
-#
-# Bonus part
-#
+#    Bonus part
 #
 
 ## Handle multiple pipes.
