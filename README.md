@@ -16,3 +16,33 @@ The Pipex program takes four arguments:
 * Passes the content through cmd1.
 * The output of cmd1 is then piped to cmd2.
 * The final output of cmd2 is written to file2.
+
+<img width="1516" alt="Screen Shot 2024-05-21 at 11 28 01 PM" src="https://github.com/BENLAAZIZ/pipex_git/assets/99501397/5d3c12f9-09f4-4e36-864c-c9dbe81b5a92">
+
+
+## Detailed Description
+### 1. Initialization and Validation:
+
+* Validate the number of arguments.
+* Check the accessibility and readability of file1.
+* Ensure file2 can be created or written to.
+
+### 2. Process Management:
+
+* Use fork() to create child processes for executing cmd1 and cmd2.
+* Use pipe() to create a pipe for IPC between the processes.
+  
+### 3. Redirection:
+
+* In the first child process, redirect the standard input (stdin) from file1 and the standard output (stdout) to the write end of the pipe.
+* In the second child process, redirect the standard input (stdin) from the read end of the pipe and the standard output (stdout) to file2.
+
+### 4. Execution:
+
+* Execute cmd1 in the first child process.
+* Execute cmd2 in the second child process.
+
+### 5. Error Handling:
+
+* Handle errors such as invalid commands, file access issues, and pipe creation failures.
+* Ensure proper closing of file descriptors and clean up resources to avoid memory leaks.
