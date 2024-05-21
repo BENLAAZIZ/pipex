@@ -29,8 +29,8 @@ The Pipex program takes four arguments:
 
 ### 2. Process Management:
 
-* Use fork() to create child processes for executing cmd1 and cmd2.
-* Use pipe() to create a pipe for IPC between the processes.
+* Use `fork()` to create child processes for executing cmd1 and cmd2.
+* Use `pipe()` to create a pipe for IPC between the processes.
   
 ### 3. Redirection:
 
@@ -39,10 +39,40 @@ The Pipex program takes four arguments:
 
 ### 4. Execution:
 
-* Execute cmd1 in the first child process.
-* Execute cmd2 in the second child process.
+* Execute `cmd1` in the first child process.
+* Execute `cmd2` in the second child process.
 
 ### 5. Error Handling:
 
 * Handle errors such as invalid commands, file access issues, and pipe creation failures.
 * Ensure proper closing of file descriptors and clean up resources to avoid memory leaks.
+
+
+#
+#
+# Bonus part
+#
+#
+
+## Handle multiple pipes.
+
+-> This: 
+
+`$> ./pipex file1 cmd1 cmd2 cmd3 ... cmdn file2`
+
+-> Should behave like:
+
+`< file1 cmd1 | cmd2 | cmd3 ... | cmdn > file2`
+## here_doc
+* Support « and » when the first parameter is "here_doc".
+
+-> This:
+
+`$> ./pipex here_doc LIMITER cmd cmd1 file`
+-> Should behave like:
+`cmd << LIMITER | cmd1 >> fil`
+
+<img width="2031" alt="Screen Shot 2024-05-21 at 11 32 42 PM" src="https://github.com/BENLAAZIZ/pipex_git/assets/99501397/ea8184e7-cae5-4b37-b1a4-244457b3f013">
+
+
+#
