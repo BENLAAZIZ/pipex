@@ -6,7 +6,7 @@
 /*   By: hben-laz <hben-laz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 15:51:48 by hben-laz          #+#    #+#             */
-/*   Updated: 2024/05/20 23:24:17 by hben-laz         ###   ########.fr       */
+/*   Updated: 2024/05/22 22:00:27 by hben-laz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,18 +23,19 @@ void	exec_cmd(char **cmd, char **cmd_find)
 	comand = NULL;
 	s = ft_strjoin("/", cmd[0]);
 	if (!s)
-		return (free_t_split(cmd));
+		return (free_t_split(cmd), free_t_split(cmd_find));
 	while (cmd_find[++i])
 	{
 		comand = ft_strjoin(cmd_find[i], s);
 		if (!comand)
-			return (free(s));
+			return (free(s), free_t_split(cmd), free_t_split(cmd_find));
 		if (access(comand, X_OK) != 0)
 			free(comand);
 		else
 			break ;
 	}
 	free(s);
+	free_t_split(cmd_find);
 	if (execve(comand, cmd, NULL) == -1)
 		ft_error("command not found: ", cmd[0], 0, 0);
 }
@@ -107,7 +108,7 @@ void	command_2(char **av, char **env, int *fd)
 	path = find_path(env, "PATH=");
 	if (path == NULL)
 		ft_error(": no such file or directory", cm1[0], 1, 0);
-	cmd_find = ft_split(path, ':');
+	cmd_find = ft_split(path + 5, ':');
 	if (!cmd_find)
 	{
 		free_t_split(cm1);
