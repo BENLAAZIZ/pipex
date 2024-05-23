@@ -49,7 +49,7 @@ The Pipex program takes four arguments:
 
 
 #
-#    Bonus part
+#   Bonus part
 #
 
 ## Handle multiple pipes.
